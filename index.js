@@ -83,7 +83,12 @@ class DDPClient extends EventEmitter{
 
     self.socket.onmessage = function(event) {
       self._message(event.data);
-      self.emit("message", event.data);
+      var data = EJSON.parse(event.data);
+      if(data.msg !== "nosub"){
+        self.emit("message", event.data);
+      } else{
+        self.removeAllListeners("message");
+      }
     };
   }
 
